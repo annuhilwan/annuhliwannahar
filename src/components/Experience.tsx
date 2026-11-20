@@ -1,6 +1,6 @@
 const experiences = [
   {
-    title: 'Software Engineer (Freelance)',
+    title: 'Software Engineer',
     company: 'PT. Star Perkasa Technology',
     period: 'Jan 2026 – Present',
     current: true,
