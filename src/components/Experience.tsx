@@ -1,7 +1,7 @@
 const experiences = [
   {
     title: 'Software Engineer',
-    company: 'PT. Star Perkasa Technology',
+    company: '',
     period: 'Jan 2026 – Present',
     current: true,
     tags: ['Express.js', 'React.js', 'PostgreSQL', 'MariaDB', 'Tailwind CSS'],
