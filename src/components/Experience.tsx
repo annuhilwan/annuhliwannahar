@@ -1,3 +1,7 @@
+import { useEffect, useRef, useState } from 'react'
+import Reveal from './Reveal'
+import SectionHeading from './SectionHeading'
+
 const experiences = [
   {
     title: 'Software Engineer',
@@ -38,7 +42,7 @@ const experiences = [
     ],
   },
   {
-    title: 'Flutter Developer',
+    title: 'Mobile Engineer (Flutter, React Native, Android)',
     company: 'Codingo Assignments Pte. Ltd.',
     period: 'Feb 2025 – Jun 2025',
     current: false,
@@ -100,66 +104,98 @@ const experiences = [
 ]
 
 export default function Experience() {
-  return (
-    <section id="experience" className="py-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-cyan-400 text-sm font-mono tracking-widest uppercase mb-3">
-            Work History
-          </p>
-          <h2 className="text-4xl font-bold text-white">Experience</h2>
-        </div>
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const [lineShown, setLineShown] = useState(false)
 
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-400/50 via-slate-700 to-transparent md:-translate-x-1/2" />
+  useEffect(() => {
+    const el = timelineRef.current
+    if (!el) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLineShown(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.05 },
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <section id="experience" className="relative py-24 md:py-32 px-6 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 grid-overlay opacity-15" />
+        <div className="absolute bottom-0 left-1/4 w-[30rem] h-[30rem] ambient ambient--core opacity-30" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto">
+        <SectionHeading eyebrow="Work History" title={<>The Road <span className="text-gradient">So Far</span></>} />
+
+        <div ref={timelineRef} className="relative">
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-mint/10">
+            <div
+              data-in={lineShown ? '' : undefined}
+              className="timeline-line w-full h-full bg-gradient-to-b from-violet via-mint/50 to-transparent"
+            />
+          </div>
 
           <div className="space-y-10">
             {experiences.map((exp, i) => (
-              <div
+              <Reveal
                 key={i}
-                className={`relative flex flex-col md:flex-row gap-8 ${
-                  i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
+                delay={i * 0.25}
+                variant={i % 2 === 0 ? 'left' : 'right'}
+                className={`relative flex flex-col md:flex-row gap-8 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
               >
-                {/* Dot */}
-                <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full border-2 border-cyan-400 bg-[#0a0f1e] z-10 top-6" />
+                <div className="absolute left-4 md:left-1/2 -translate-x-1/2 top-6 z-10">
+                  <span
+                    className={`block w-3 h-3 rounded-full border-2 ${
+                      exp.current ? 'border-violet bg-violet shadow-[0_0_14px_#a78bfa]' : 'border-mint/60 bg-ink'
+                    }`}
+                  />
+                  {exp.current && (
+                    <span className="absolute inset-0 rounded-full bg-violet/60 animate-[ping-ring_1.8s_ease-out_infinite]" />
+                  )}
+                </div>
 
-                {/* Spacer for alternating layout */}
                 <div className="hidden md:block md:w-1/2" />
 
-                {/* Card */}
                 <div className="ml-10 md:ml-0 md:w-1/2 md:px-8">
                   <div
-                    className={`bg-slate-900/80 border rounded-2xl p-6 hover:shadow-xl transition-all duration-300 ${
-                      exp.current
-                        ? 'border-cyan-400/40 shadow-lg shadow-cyan-400/5'
-                        : 'border-slate-800 hover:border-slate-700'
+                    className={`glass-card group rounded-2xl p-6 ${
+                      exp.current ? 'border-violet/35 shadow-[0_0_40px_-20px_rgba(167,139,250,.6)]' : ''
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-4 mb-3">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                       <div>
-                        <h3 className="text-white font-semibold text-lg leading-tight">
+                        <h3 className="font-display text-lg font-medium text-white group-hover:text-mint transition-colors duration-300">
                           {exp.title}
                         </h3>
-                        <p className="text-cyan-400 text-sm mt-0.5">{exp.company}</p>
+                        {exp.company && (
+                          <p className="text-sm text-violet mt-0.5">{exp.company}</p>
+                        )}
                       </div>
                       <span
-                        className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${
+                        className={`shrink-0 self-start text-[.7rem] px-3 py-1 rounded-full border font-medium ${
                           exp.current
-                            ? 'bg-cyan-400/15 text-cyan-400 border border-cyan-400/30'
-                            : 'bg-slate-800 text-slate-500 border border-slate-700'
+                            ? 'bg-violet/10 text-violet border-violet/30'
+                            : 'bg-mint/5 text-muted-light border-mint/10'
                         }`}
                       >
-                        {exp.current ? '● ' : ''}{exp.period}
+                        {exp.current ? '● ' : ''}
+                        {exp.period}
                       </span>
                     </div>
 
-                    <ul className="space-y-1.5 mb-4">
-                      {exp.bullets.map((b, j) => (
-                        <li key={j} className="text-slate-400 text-sm flex gap-2">
-                          <span className="text-cyan-400 mt-1 flex-shrink-0">▸</span>
-                          {b}
+                    <ul className="space-y-1.5 mb-5">
+                      {exp.bullets.map((bullet, j) => (
+                        <li key={j} className="text-slate-400 text-sm flex gap-2 leading-relaxed">
+                          <span className="text-violet mt-0.5 shrink-0">▸</span>
+                          {bullet}
                         </li>
                       ))}
                     </ul>
@@ -168,7 +204,7 @@ export default function Experience() {
                       {exp.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-2.5 py-0.5 bg-slate-800 text-slate-400 text-xs rounded-md border border-slate-700"
+                          className="px-2.5 py-0.5 rounded-md border border-mint/10 bg-mint/5 text-[.7rem] text-slate-400 hover:border-violet/40 hover:text-violet transition-colors duration-200"
                         >
                           {tag}
                         </span>
@@ -176,7 +212,7 @@ export default function Experience() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

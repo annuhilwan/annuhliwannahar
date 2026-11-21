@@ -1,3 +1,6 @@
+import Reveal from './Reveal'
+import SectionHeading from './SectionHeading'
+
 const skillGroups = [
   {
     category: 'Backend',
@@ -31,40 +34,73 @@ const skillGroups = [
   },
 ]
 
+const marqueeItems = [
+  'Laravel', 'React', 'Node.js', 'Flutter', 'TypeScript', 'PostgreSQL', 'Vue.js',
+  'Express.js', 'Tailwind CSS', 'MongoDB', 'Nuxt.js', 'Python', 'Firebase', 'Nginx', 'REST API',
+]
+
+function MarqueeRow({ reverse = false }: { reverse?: boolean }) {
+  return (
+    <div className="marquee-mask overflow-hidden py-2">
+      <div className={`marquee-track ${reverse ? 'marquee-track--reverse' : ''}`}>
+        {[...marqueeItems, ...marqueeItems].map((item, i) => (
+          <span key={`${item}-${i}`} className="flex items-center shrink-0">
+            <span className="font-display text-lg sm:text-xl text-white/25 hover:text-violet/70 transition-colors duration-300 px-6">
+              {item}
+            </span>
+            <span className="text-violet/40">✦</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function Skills() {
   return (
-    <section id="skills" className="py-24 px-6 bg-slate-900/30">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-cyan-400 text-sm font-mono tracking-widest uppercase mb-3">
-            Technical Skills
-          </p>
-          <h2 className="text-4xl font-bold text-white">
-            Technologies I Work With
-          </h2>
+    <section id="skills" className="relative py-24 md:py-32 px-6 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 grid-overlay opacity-20" />
+        <div className="absolute top-1/3 right-[-10%] w-[32rem] h-[32rem] ambient ambient--low opacity-40" />
+      </div>
+
+      <div className="relative max-w-7xl mx-auto">
+        <SectionHeading
+          eyebrow="Technical Skills"
+          title={<>Technologies I <span className="text-gradient">Work With</span></>}
+        />
+
+        <div className="mb-14 border-y border-mint/10 py-3">
+          <MarqueeRow />
+          <MarqueeRow reverse />
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillGroups.map((group) => (
-            <div
-              key={group.category}
-              className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-cyan-400/30 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/5"
-            >
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">{group.icon}</span>
-                <h3 className="text-white font-semibold text-lg">{group.category}</h3>
+          {skillGroups.map((group, i) => (
+            <Reveal key={group.category} delay={i * 0.5} variant="scale">
+              <div className="glass-card group h-full rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-11 h-11 rounded-lg border border-violet/25 bg-violet/5 flex items-center justify-center text-xl transition-transform duration-500 group-hover:rotate-12">
+                    {group.icon}
+                  </div>
+                  <div>
+                    <h3 className="font-display text-lg font-medium text-white">{group.category}</h3>
+                    <span className="text-[.6rem] uppercase tracking-[.18em] text-muted-light">
+                      {group.skills.length} technologies
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {group.skills.map((skill, j) => (
+                    <Reveal key={skill} delay={i * 0.5 + j * 0.12}>
+                      <span className="cursor-default px-3 py-1 rounded-full border border-mint/15 bg-mint/5 text-xs text-slate-300 hover:border-violet/50 hover:text-violet hover:bg-violet/5 transition-all duration-200">
+                        {skill}
+                      </span>
+                    </Reveal>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {group.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1 bg-slate-800 text-slate-300 text-xs rounded-full border border-slate-700 hover:border-cyan-400/50 hover:text-cyan-400 transition-colors duration-200"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

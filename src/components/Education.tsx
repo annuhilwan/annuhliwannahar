@@ -1,103 +1,108 @@
+import Reveal from './Reveal'
+import SectionHeading from './SectionHeading'
+
+const softSkills = ['Problem Solving', 'Communication', 'Adaptability', 'Team Collaboration']
+
+const languages = [
+  { lang: 'Indonesian', level: 'Native', pct: 100 },
+  { lang: 'English', level: 'Professional Working Proficiency', pct: 80 },
+]
+
 export default function Education() {
   return (
-    <section id="education" className="py-24 px-6 bg-slate-900/30">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-cyan-400 text-sm font-mono tracking-widest uppercase mb-3">
-            Background
-          </p>
-          <h2 className="text-4xl font-bold text-white">Education</h2>
-        </div>
+    <section id="education" className="relative py-24 md:py-32 px-6 overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 grid-overlay opacity-20" />
+        <div className="absolute top-0 right-1/4 w-[28rem] h-[28rem] ambient ambient--high opacity-40" />
+      </div>
 
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-8 hover:border-cyan-400/30 transition-all duration-300 hover:shadow-xl hover:shadow-cyan-400/5">
-            <div className="flex items-start gap-6">
-              {/* Icon */}
-              <div className="w-16 h-16 bg-cyan-400/10 border border-cyan-400/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <span className="text-3xl">🎓</span>
-              </div>
+      <div className="relative max-w-7xl mx-auto">
+        <SectionHeading eyebrow="Background" title={<>Where It <span className="text-gradient">Began</span></>} />
 
-              <div className="flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
-                  <div>
-                    <h3 className="text-white font-semibold text-xl">
-                      Bachelor's in Library & Information Science
-                    </h3>
-                    <p className="text-cyan-400 mt-1">
-                      Universitas Wijaya Kusuma Surabaya
-                    </p>
-                  </div>
-                  <span className="flex-shrink-0 bg-slate-800 text-slate-400 text-xs px-3 py-1.5 rounded-full border border-slate-700 self-start">
-                    Graduated
-                  </span>
+        <div className="max-w-3xl mx-auto">
+          <Reveal variant="scale">
+            <div className="glass-card group rounded-2xl p-6 sm:p-8">
+              <div className="flex items-start gap-5 sm:gap-6">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl border border-violet/25 bg-violet/5 flex items-center justify-center text-3xl shrink-0 transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
+                  🎓
                 </div>
+                <div className="flex-1">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+                    <div>
+                      <h3 className="font-display text-lg sm:text-xl font-medium text-white">
+                        Bachelor's in Library &amp; Information Science
+                      </h3>
+                      <p className="text-violet mt-1 text-sm">
+                        Universitas Wijaya Kusuma Surabaya
+                      </p>
+                    </div>
+                    <span className="shrink-0 self-start rounded-full border border-mint/15 bg-mint/5 px-3 py-1.5 text-[.7rem] text-muted-light">
+                      Graduated
+                    </span>
+                  </div>
 
-                <div className="flex flex-wrap gap-4 mt-4">
-                  <div className="flex items-center gap-2 bg-slate-800 rounded-lg px-3 py-2 border border-slate-700">
-                    <span className="text-yellow-400">⭐</span>
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase">GPA</div>
-                      <div className="text-white font-bold text-lg">3.75</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 bg-slate-800 rounded-lg px-3 py-2 border border-slate-700">
-                    <span className="text-blue-400">📚</span>
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase">Focus</div>
-                      <div className="text-white text-sm font-medium">Information Systems</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 bg-slate-800 rounded-lg px-3 py-2 border border-slate-700">
-                    <span className="text-green-400">📍</span>
-                    <div>
-                      <div className="text-xs text-slate-500 uppercase">Location</div>
-                      <div className="text-white text-sm font-medium">Surabaya, Indonesia</div>
-                    </div>
+                  <div className="flex flex-wrap gap-3">
+                    {[
+                      { icon: '⭐', label: 'GPA', value: '3.75', accent: 'text-violet' },
+                      { icon: '📚', label: 'Focus', value: 'Information Systems', accent: 'text-mint' },
+                      { icon: '📍', label: 'Location', value: 'Surabaya, Indonesia', accent: 'text-emerald-400' },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="flex items-center gap-2 rounded-lg border border-mint/10 bg-mint/5 px-3 py-2"
+                      >
+                        <span className={item.accent}>{item.icon}</span>
+                        <div>
+                          <div className="text-[.6rem] uppercase tracking-[.14em] text-muted-light">{item.label}</div>
+                          <div className="text-white text-sm font-medium">{item.value}</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          </Reveal>
 
-          {/* Soft Skills */}
-          <div className="mt-8 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-cyan-400/30 transition-all duration-300">
-            <h3 className="text-white font-semibold text-lg mb-4">Soft Skills</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {['Problem Solving', 'Communication', 'Adaptability', 'Team Collaboration'].map((skill) => (
-                <div
-                  key={skill}
-                  className="flex items-center gap-3 bg-slate-800/60 rounded-lg px-4 py-3 border border-slate-700"
-                >
-                  <span className="w-2 h-2 bg-cyan-400 rounded-full flex-shrink-0" />
-                  <span className="text-slate-300 text-sm">{skill}</span>
-                </div>
-              ))}
+          <Reveal delay={1}>
+            <div className="glass-card mt-6 rounded-2xl p-6">
+              <h3 className="font-display text-lg font-medium text-white mb-5">Soft Skills</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {softSkills.map((skill, i) => (
+                  <Reveal key={skill} delay={1 + i * 0.2}>
+                    <div className="flex items-center gap-3 rounded-lg border border-mint/10 bg-mint/5 px-4 py-3 hover:border-violet/40 transition-colors duration-300">
+                      <span className="w-2 h-2 rounded-full bg-violet shadow-[0_0_10px_#a78bfa] shrink-0" />
+                      <span className="text-slate-300 text-sm">{skill}</span>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
 
-          {/* Languages */}
-          <div className="mt-4 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 hover:border-cyan-400/30 transition-all duration-300">
-            <h3 className="text-white font-semibold text-lg mb-4">Languages</h3>
-            <div className="space-y-3">
-              {[
-                { lang: 'Indonesian', level: 'Native', pct: 100 },
-                { lang: 'English', level: 'Professional Working Proficiency', pct: 80 },
-              ].map((l) => (
-                <div key={l.lang}>
-                  <div className="flex justify-between text-sm mb-1.5">
-                    <span className="text-slate-300 font-medium">{l.lang}</span>
-                    <span className="text-slate-500">{l.level}</span>
-                  </div>
-                  <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full"
-                      style={{ width: `${l.pct}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
+          <Reveal delay={2}>
+            <div className="glass-card mt-6 rounded-2xl p-6">
+              <h3 className="font-display text-lg font-medium text-white mb-5">Languages</h3>
+              <div className="space-y-4">
+                {languages.map((language, i) => (
+                  <Reveal key={language.lang} delay={2 + i * 0.3}>
+                    <div>
+                      <div className="flex justify-between text-sm mb-2 gap-3">
+                        <span className="text-slate-200 font-medium">{language.lang}</span>
+                        <span className="text-muted-light text-xs text-right">{language.level}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-mint/10 overflow-hidden">
+                        <div
+                          className="bar-fill h-full rounded-full bg-gradient-to-r from-teal via-mint to-violet"
+                          style={{ width: `${language.pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
+              </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
