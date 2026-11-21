@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const links = [
   { label: 'About', href: '#about' },
@@ -10,82 +10,123 @@ const links = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [active, setActive] = useState('#hero')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
+    let last = window.scrollY
+
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 24)
+      setHidden(y > 400 && y > last + 4 && !menuOpen)
+      last = y
+
+      let current = '#hero'
+      for (const link of links) {
+        const el = document.getElementById(link.href.slice(1))
+        if (el && el.getBoundingClientRect().top <= 160) current = link.href
+      }
+      setActive(current)
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [menuOpen])
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-[#0a0f1e]/90 backdrop-blur-md shadow-lg shadow-black/20' : 'bg-transparent'
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-[transform,background-color,border-color] duration-300 ${
+        hidden ? '-translate-y-full' : 'translate-y-0'
+      } ${
+        scrolled || menuOpen
+          ? 'bg-ink/80 backdrop-blur-[10px] border-mint/10'
+          : 'bg-transparent border-transparent'
       }`}
     >
-      <nav className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#hero" className="text-xl font-bold text-white tracking-tight">
-          <span className="text-cyan-400">&lt;</span>
+      <nav className="max-w-7xl mx-auto px-6 md:px-10 h-18 flex items-center justify-between">
+        <a href="#hero" className="group font-display text-xl font-medium tracking-tight text-white">
+          <span className="text-violet transition-colors duration-300 group-hover:text-violet-bright">&lt;</span>
           AL
-          <span className="text-cyan-400">/&gt;</span>
+          <span className="text-violet transition-colors duration-300 group-hover:text-violet-bright">/&gt;</span>
+          <span className="ml-2 hidden sm:inline-block text-[.6rem] uppercase tracking-[.25em] text-muted-light align-middle">
+            Portfolio
+          </span>
         </a>
 
-        {/* Desktop links */}
         <ul className="hidden md:flex items-center gap-8">
-          {links.map((l) => (
-            <li key={l.href}>
+          {links.map((link) => (
+            <li key={link.href}>
               <a
-                href={l.href}
-                className="text-sm text-slate-400 hover:text-cyan-400 transition-colors duration-200"
+                href={link.href}
+                className={`group relative block py-2 font-display text-[.9rem] transition-colors duration-200 ${
+                  active === link.href ? 'text-white' : 'text-muted-light hover:text-white'
+                }`}
               >
-                {l.label}
+                {link.label}
+                <span
+                  className={`absolute bottom-0 left-0 h-0.5 w-full origin-left bg-violet transition-transform duration-200 ${
+                    active === link.href ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                  }`}
+                />
               </a>
             </li>
           ))}
         </ul>
 
-        <a
-          href="#contact"
-          className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-cyan-400/40 text-cyan-400 text-sm hover:bg-cyan-400/10 transition-all duration-200"
-        >
+        <a href="#contact" className="btn-primary hidden md:inline-flex px-5 py-2.5 text-sm group">
           Hire Me
+          <span className="arrow-nudge">→</span>
         </a>
 
-        {/* Mobile hamburger */}
         <button
-          className="md:hidden text-slate-400 hover:text-white"
-          onClick={() => setMenuOpen(!menuOpen)}
+          type="button"
+          className="md:hidden relative w-10 h-10 rounded-md border border-mint/20 text-mint hover:border-violet/50 hover:text-violet transition-colors duration-200"
+          onClick={() => setMenuOpen((open) => !open)}
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {menuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
+          <span className="absolute left-2.5 top-[13px] w-5 h-px bg-current transition-transform duration-300" style={{ transform: menuOpen ? 'translateY(6px) rotate(45deg)' : undefined }} />
+          <span className="absolute left-2.5 top-[19px] w-5 h-px bg-current transition-opacity duration-200" style={{ opacity: menuOpen ? 0 : 1 }} />
+          <span className="absolute left-2.5 top-[25px] w-5 h-px bg-current transition-transform duration-300" style={{ transform: menuOpen ? 'translateY(-6px) rotate(-45deg)' : undefined }} />
         </button>
       </nav>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-[#0d1322] border-t border-slate-800 px-6 pb-4">
-          <ul className="flex flex-col gap-4 pt-4">
-            {links.map((l) => (
-              <li key={l.href}>
+      <div
+        className={`grid md:hidden overflow-hidden bg-ink-deep/95 backdrop-blur-lg border-t border-mint/10 transition-[grid-template-rows,opacity] duration-300 ${
+          menuOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+      >
+        <div className="min-h-0">
+          <ul className="flex flex-col px-6 md:px-10 py-4">
+            {links.map((link, i) => (
+              <li key={link.href}>
                 <a
-                  href={l.href}
+                  href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="text-slate-400 hover:text-cyan-400 transition-colors text-sm"
+                  className="flex items-center justify-between py-3 font-display text-sm border-b border-mint/10 text-slate-300 hover:text-violet transition-colors duration-200"
+                  style={{ transitionDelay: `${i * 40}ms` }}
                 >
-                  {l.label}
+                  {link.label}
+                  <span className="text-violet/60">↗</span>
                 </a>
               </li>
             ))}
+            <li className="pt-5">
+              <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-primary w-full py-3 text-sm group">
+                Hire Me <span className="arrow-nudge">→</span>
+              </a>
+            </li>
           </ul>
         </div>
-      )}
+      </div>
+
+      <span
+        className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-violet to-transparent transition-all duration-700"
+        style={{ width: scrolled ? '100%' : '0%', opacity: scrolled ? 0.6 : 0 }}
+      />
     </header>
   )
 }

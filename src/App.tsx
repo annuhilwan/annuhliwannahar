@@ -6,10 +6,12 @@ import Experience from './components/Experience'
 import Education from './components/Education'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Splash from './components/Splash'
 
 export default function App() {
   return (
-    <div className="bg-[#0a0f1e] min-h-screen">
+    <div className="bg-ink min-h-screen">
+      <Splash />
       <Navbar />
       <Hero />
       <About />
